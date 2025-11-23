@@ -1,6 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { Checkbox } from '@/components/ui/checkbox';
+import { BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { useState } from 'react';
 
 interface ProfitDynamicsChartProps {
   data: Array<{
@@ -17,12 +19,15 @@ interface ProfitDynamicsChartProps {
 }
 
 const ProfitDynamicsChart = ({ data, grouping, onGroupingChange }: ProfitDynamicsChartProps) => {
+  const [showRevenue, setShowRevenue] = useState(true);
+  const [showExpenses, setShowExpenses] = useState(true);
+
   if (data.length === 0) return null;
 
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap gap-4">
           <CardTitle>Динамика прибыли</CardTitle>
           <div className="flex gap-1">
             <Button 
@@ -62,6 +67,28 @@ const ProfitDynamicsChart = ({ data, grouping, onGroupingChange }: ProfitDynamic
             </Button>
           </div>
         </div>
+        <div className="flex gap-4 mt-4">
+          <div className="flex items-center gap-2">
+            <Checkbox 
+              id="revenue"
+              checked={showRevenue}
+              onCheckedChange={(checked) => setShowRevenue(checked as boolean)}
+            />
+            <label htmlFor="revenue" className="text-sm font-medium cursor-pointer">
+              Доходы
+            </label>
+          </div>
+          <div className="flex items-center gap-2">
+            <Checkbox 
+              id="expenses"
+              checked={showExpenses}
+              onCheckedChange={(checked) => setShowExpenses(checked as boolean)}
+            />
+            <label htmlFor="expenses" className="text-sm font-medium cursor-pointer">
+              Расходы
+            </label>
+          </div>
+        </div>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={400}>
@@ -82,8 +109,11 @@ const ProfitDynamicsChart = ({ data, grouping, onGroupingChange }: ProfitDynamic
                 border: '1px solid hsl(220, 13%, 91%)',
                 borderRadius: '8px',
               }}
+              formatter={(value: number) => new Intl.NumberFormat('ru-RU').format(value)}
             />
-            <Bar dataKey="net_profit" fill="hsl(142, 76%, 36%)" radius={[8, 8, 0, 0]} name="Чистая прибыль" />
+            <Legend />
+            {showRevenue && <Bar dataKey="revenue" fill="hsl(142, 76%, 36%)" radius={[8, 8, 0, 0]} name="Доходы" />}
+            {showExpenses && <Bar dataKey="expenses" fill="hsl(0, 72%, 51%)" radius={[8, 8, 0, 0]} name="Расходы" />}
           </BarChart>
         </ResponsiveContainer>
       </CardContent>
