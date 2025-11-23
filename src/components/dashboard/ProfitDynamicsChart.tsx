@@ -112,8 +112,8 @@ const ProfitDynamicsChart = ({ data, grouping, onGroupingChange }: ProfitDynamic
               formatter={(value: number) => new Intl.NumberFormat('ru-RU').format(value)}
             />
             <Legend />
-            {showRevenue && <Bar dataKey="revenue" fill="hsl(142, 76%, 36%)" radius={[8, 8, 0, 0]} name="Доходы" />}
-            {showExpenses && <Bar dataKey="expenses" fill="hsl(0, 72%, 51%)" radius={[8, 8, 0, 0]} name="Расходы" />}
+            {showRevenue && <Bar dataKey="revenue" stackId={showRevenue && showExpenses ? "stack" : "revenue"} fill="hsl(142, 76%, 36%)" radius={showRevenue && showExpenses ? [0, 0, 0, 0] : [8, 8, 0, 0]} name="Доходы" />}
+            {showExpenses && <Bar dataKey="expenses" stackId={showRevenue && showExpenses ? "stack" : "expenses"} fill="hsl(0, 72%, 51%)" radius={showRevenue && showExpenses ? [8, 8, 0, 0] : [8, 8, 0, 0]} name="Расходы" />}
           </BarChart>
         </ResponsiveContainer>
       </CardContent>
